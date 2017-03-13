@@ -1,6 +1,7 @@
 const request = require('request');
 const async = require('async');
 const fs = require('fs');
+
 const unavailableHeroes = [
   'Beastmaster','Chen','Doom','Earth Spirit','Ember Spirit',
   'Invoker','Io','Keeper of the Light','Lone Druid','Meepo',
@@ -8,35 +9,39 @@ const unavailableHeroes = [
   'Rubick','Shadow Fiend','Shadow Demon','Spectre','Techies',
   'Templar Assassin','Timbersaw','Troll Warlord','Tusk','Vengeful Spirit'
 ];
+
 const sources = [
   {
     name: 'abilities',
-    url: 'https://raw.githubusercontent.com/odota/dotaconstants/67a3be26c8bddc4f88312f119074071eb2636166/build/abilities.json',
+    url: 'http://www.dota2.com/jsfeed/abilitydata',
     transform: response => {
+      const abilityData = response.abilitydata;
       const abilities = [];
-      Object.keys(response).filter(ability => !ability.includes('special')).forEach((abilityKey) => {
+
+      Object.keys(abilityData).filter(ability => !ability.includes('special')).forEach((abilityKey) => {
         const ability = {};
-        if (response[abilityKey].hurl === 'Natures_Prophet') {
+
+        if (abilityData[abilityKey].hurl === 'Natures_Prophet') {
           ability.hero = 'Nature\'s Prophet';
-        } else if (response[abilityKey].hurl === 'MonkeyKing') {
-          ability.hero = 'Monkey King';
         } else {
-          ability.hero = response[abilityKey].hurl.split('_').join(' ');
+          ability.hero = abilityData[abilityKey].hurl.split('_').join(' ');
         }
+
         if (!unavailableHeroes.includes(ability.hero)) {
-          ability.name = response[abilityKey].dname;
+          ability.name = abilityData[abilityKey].dname;
           ability.slug = abilityKey;
-          ability.effects = response[abilityKey].affects;
-          ability.description = response[abilityKey].desc;
-          ability.notes = response[abilityKey].notes;
-          ability.damage = response[abilityKey].dmg;
-          ability.attributes = response[abilityKey].attrib;
-          ability.cmb = response[abilityKey].cmb;
-          ability.lore = response[abilityKey].lore;
-          ability.img = 'http://cdn.dota2.com' + response[abilityKey].img;
+          ability.description = abilityData[abilityKey].desc;
+          ability.img = 'http://cdn.dota2.com/apps/dota2/images/abilities/' + abilityKey + '_md.png';
+          // ability.attributes = abilityData[abilityKey].attrib;
+          // ability.cmb = abilityData[abilityKey].cmb;
+          // ability.damage = abilityData[abilityKey].dmg;
+          // ability.effects = abilityData[abilityKey].affects;
+          // ability.lore = abilityData[abilityKey].lore;
+          // ability.notes = abilityData[abilityKey].notes;
           abilities.push(ability);
         }
       });
+
       return abilities;
     },
   },
@@ -45,6 +50,7 @@ const sources = [
     url: 'https://api.opendota.com/api/heroes',
     transform: response => {
       const heroes = [];
+
       const compareHero = (a, b) => {
         if (a.name > b.name) { return 1; }
         if (a.name < b.name) { return -1; }
