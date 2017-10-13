@@ -1,7 +1,7 @@
 {
-  "name": "simple-man",
-  "version": "0.0.1",
-  "description": "I'm a simple man. I see skills upgradable by Aghanim's Scepter, I take skills upgradable by Aghanim's Scepter.",
+  "name": "aghanims-wrath",
+  "version": "0.1.0",
+  "description": "A tool that shows skills upgradable by Aghanim's Scepter per selected hero in Ability Draft mode in Dota 2",
   "author": "denizarsan <deniz.arsan@gmail.com>",
   "private": true,
   "scripts": {

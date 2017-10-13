@@ -1,12 +1,19 @@
-# simple-man
+# aghanims-wrath
 
-> I'm a simple man. I see skills upgradable by Aghanim's Scepter, I take skills upgradable by Aghanim's Scepter.
+> A tool that shows skills upgradable by Aghanim's Scepter per selected hero in Ability Draft mode in Dota 2
 
 ## Build Setup
 
 ``` bash
+# clone the repository
+git clone git@github.com:denizarsan/aghanims-wrath.git
+cd aghanims-wrath
+
 # install dependencies
 npm install
+
+# initialize/update json data
+npm run update-data
 
 # serve with hot reload at localhost:8080
 npm run dev
@@ -18,4 +25,3 @@ npm run build
 npm run build --report
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
