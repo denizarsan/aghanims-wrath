@@ -1,30 +1,38 @@
-const request = require('request');
-const async = require('async');
+const axios = require('axios');
 const fs = require('fs');
 
-const sources = [
-  {
-    name: 'abilities',
-    url: 'https://raw.githubusercontent.com/odota/dotaconstants/master/build/abilities.json',
-    transform: response => {
-      const abilities = {};
+const unavailableHeroes = [
+  'Beastmaster',
+  'Chen',
+  'Doom',
+  'Earth Spirit',
+  'Ember Spirit',
+  'Invoker',
+  'Io',
+  'Keeper of the Light',
+  'Lone Druid',
+  'Meepo',
+  'Monkey King',
+  'Morphling',
+  'Ogre Magi',
+  'Phoenix',
+  'Puck',
+  'Rubick',
+  'Shadow Fiend',
+  'Shadow Demon',
+  'Spectre',
+  'Techies',
+  'Templar Assassin',
+  'Timbersaw',
+  'Troll Warlord',
+  'Tusk',
+  'Vengeful Spirit'
+];
 
-      Object.keys(response).filter(key => !key.includes('special')).forEach((key) => {
-        abilities[key] = {
-          name: response[key].dname,
-          description: response[key].desc,
-          img: 'http://cdn.dota2.com/apps/dota2/images/abilities/' + key + '_md.png',
-          slug: key
-        }
-      });
-
-      return abilities;
-    },
-  },
-  {
-    name: 'heroes',
-    url: 'https://api.opendota.com/api/heroes',
-    transform: response => {
+const getHeroes = () => {
+  const url = 'https://api.opendota.com/api/heroes';
+  const config = {
+    transformResponse: axios.defaults.transformResponse.concat(response => {
       const heroes = {};
 
       const heroComparator = (a, b) => {
@@ -44,12 +52,38 @@ const sources = [
       });
 
       return heroes;
-    },
-  },
-  {
-    name: 'hero_abilities',
-    url: 'https://raw.githubusercontent.com/odota/dotaconstants/master/build/hero_abilities.json',
-    transform: response => {
+    })
+  };
+
+  return axios.get(url, config);
+};
+
+const getAbilities = () => {
+  const url = 'https://raw.githubusercontent.com/odota/dotaconstants/master/build/abilities.json';
+  const config = {
+    transformResponse: axios.defaults.transformResponse.concat(response => {
+      const abilities = {};
+
+      Object.keys(response).filter(key => !key.includes('special')).forEach((key) => {
+        abilities[key] = {
+          name: response[key].dname,
+          description: response[key].desc,
+          img: 'http://cdn.dota2.com/apps/dota2/images/abilities/' + key + '_md.png',
+          slug: key
+        }
+      });
+
+      return abilities;
+    })
+  };
+
+  return axios.get(url, config);
+};
+
+const getHeroAbilities = () => {
+  const url = 'https://raw.githubusercontent.com/odota/dotaconstants/master/build/hero_abilities.json';
+  const config = {
+    transformResponse: axios.defaults.transformResponse.concat(response => {
       Object.keys(response).forEach(key => {
         const newKey = key.replace('npc_dota_hero_', '');
         response[newKey] = {}
@@ -58,28 +92,33 @@ const sources = [
       })
 
       return response;
-    }
-  },
-];
+    })
+  };
 
-async.each(sources,
-  (source, callback) => {
-    console.log(source.url);
-    request(source.url, (error, response, body) => {
-      if (error || response.statusCode !== 200) {
-        return callback(error);
+  return axios.get(url, config);
+};
+
+axios.all([getHeroes(), getAbilities(), getHeroAbilities()])
+  .then(axios.spread((heroesResponse, abilitiesResponse, heroAbilitiesResponse) => {
+
+    // Get response data
+    const heroes = heroesResponse.data;
+    const abilities = abilitiesResponse.data;
+    const heroAbilities = heroAbilitiesResponse.data;
+
+    // Initialize resulting data
+    const data = {};
+
+    // Go through each available hero and populate their abilities
+    Object.keys(heroes).forEach((key) => {
+      if (!unavailableHeroes.includes(heroes[key].name)) {
+        data[key] = Object.assign(heroes[key], heroAbilities[key]);
+        data[key].abilities = data[key].abilities.map(ability =>
+          Object.assign(abilities[ability], { hero: heroes[key].name }));
       }
-      body = JSON.parse(body);
-      if (source.transform) {
-        body = source.transform(body);
-      }
-      fs.writeFileSync('./src/assets/' + source.name + '.json', JSON.stringify(body, null, 2));
-      callback(error);
     });
-  },
-  (error) => {
-    if (error) {
-      throw error;
-    }
-  }
+
+    // Write data to file
+    fs.writeFileSync('./src/assets/data.json', JSON.stringify(data, null, 2));
+  })
 );

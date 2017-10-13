@@ -67,21 +67,10 @@
 </template>
 
 <script>
-import Abilities from './assets/abilities.json';
-import Heroes from './assets/heroes.json';
-import HeroAbilities from './assets/hero_abilities.json';
+import Data from './assets/data.json';
 
 import AbilityList from './components/AbilityList';
 import HeroGrid from './components/HeroGrid';
-
-// List of unavailable heroes in ability draft
-const unavailableHeroes = [
-  'Beastmaster', 'Chen', 'Doom', 'Earth Spirit', 'Ember Spirit',
-  'Invoker', 'Io', 'Keeper of the Light', 'Lone Druid', 'Meepo',
-  'Monkey King', 'Morphling', 'Ogre Magi', 'Phoenix', 'Puck',
-  'Rubick', 'Shadow Fiend', 'Shadow Demon', 'Spectre', 'Techies',
-  'Templar Assassin', 'Timbersaw', 'Troll Warlord', 'Tusk', 'Vengeful Spirit',
-];
 
 // Comparators for sorting
 const heroComparator = (a, b) => {
@@ -96,18 +85,6 @@ const abilityComparator = (a, b) => {
   return 0;
 };
 
-
-// Initialize everything
-const everything = {};
-
-Object.keys(Heroes).forEach((key) => {
-  if (!unavailableHeroes.includes(Heroes[key].name)) {
-    everything[key] = Object.assign(Heroes[key], HeroAbilities[key]);
-    everything[key].abilities = everything[key].abilities.map(ability =>
-      Object.assign(Abilities[ability], { hero: Heroes[key].name }));
-  }
-});
-
 export default {
   name: 'app',
   components: { AbilityList, HeroGrid },
@@ -115,7 +92,7 @@ export default {
     return {
       abilities: [],
       aghsUpgrades: [],
-      heroes: Object.values(everything).sort(heroComparator),
+      heroes: Object.values(Data).sort(heroComparator),
       selectedHeroes: [],
       query: '',
     };
@@ -130,7 +107,7 @@ export default {
     },
     onHeroSelected(hero) {
       // Add new abilities to the list of all abilities
-      this.abilities = [...this.abilities, ...everything[hero.slug].abilities];
+      this.abilities = [...this.abilities, ...Data[hero.slug].abilities];
 
       // Remove duplicates
       this.abilities = [...new Set(this.abilities)];
