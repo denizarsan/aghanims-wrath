@@ -11,7 +11,7 @@
           <p>
             <strong>{{ ability.hero }}</strong> - <strong>{{ ability.name }}</strong>
             <br>
-            {{ ability.description }}
+            {{ ability.aghs }}
           </p>
         </div>
       </div>

@@ -41,9 +41,9 @@
           </a>
         </div>
 
-        <div class="upgrades" v-if="aghsUpgrades.length">
+        <div class="upgrades" v-if="abilities.length">
           <h1 class="title has-text-centered">Next, see skills upgradable by Aghanim's Scepter</h1>
-          <ability-list :abilities="aghsUpgrades"></ability-list>
+          <ability-list :abilities="abilities"></ability-list>
         </div>
       </section>
     </div>
@@ -53,7 +53,7 @@
         <div class="content has-text-centered">
           <strong>Aghanim's Wrath</strong> by <a href="https://twitter.com/denizarsan">Deniz Arsan</a>.
           <br>
-          Design partially inspired from <a href="https://howdoiplay.com">Tsunami's Dota Hero Tips and Counters</a>.
+          Design inspired partially from <a href="https://howdoiplay.com">Tsunami's Dota Hero Tips and Counters</a>.
           <br>
           <a href="http://www.dota2.com">Dota 2</a> is a registered trademark of <a href="http://www.valvesoftware.com/">Valve Corporation</a>.
           <br>
@@ -91,7 +91,6 @@ export default {
   data() {
     return {
       abilities: [],
-      aghsUpgrades: [],
       heroes: Object.values(Data).sort(heroComparator),
       selectedHeroes: [],
       query: '',
@@ -101,7 +100,6 @@ export default {
     onResetClick() {
       // Reset everything
       this.abilities = [];
-      this.aghsUpgrades = [];
       this.selectedHeroes = [];
       this.query = '';
     },
@@ -115,9 +113,6 @@ export default {
       // Sort the list of all abilities alphabetically by hero name
       this.abilities.sort(abilityComparator);
 
-      // Update the list of abilities upgradable by Aghanim's Scepter
-      this.aghsUpgrades = this.abilities.filter(ability => ability.description.includes('Aghanim\'s Scepter'));
-
       // Add hero to selected heroes
       this.selectedHeroes.push(hero);
 
@@ -127,9 +122,6 @@ export default {
     onHeroUnselected(hero) {
       // Remove abilities of the hero from the list of all abilities
       this.abilities = this.abilities.filter(ability => ability.hero !== hero.name);
-
-      // Remove abilities of the hero from the list of abilities upgradable by Aghanim's Scepter
-      this.aghsUpgrades = this.aghsUpgrades.filter(ability => ability.hero !== hero.name);
 
       // Remove hero from the list of selected heroes
       this.selectedHeroes.splice(this.selectedHeroes.indexOf(hero), 1);
