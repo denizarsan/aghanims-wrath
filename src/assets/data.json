@@ -1135,7 +1135,16 @@
     "slug": "keeper_of_the_light",
     "img": "http://cdn.dota2.com/apps/dota2/images/heroes/keeper_of_the_light_full.png",
     "icon": "http://cdn.dota2.com/apps/dota2/images/heroes/keeper_of_the_light_icon.png",
-    "abilities": []
+    "abilities": [
+      {
+        "name": "Illuminate",
+        "description": "Channels light energy, building power the longer it's channeled.  Once released, a wave is sent forth that deals damage and gives vision in its path.  The longer it is channeled, the more damage is dealt.\n\nUpgradable by Aghanim's Scepter.",
+        "img": "http://cdn.dota2.com/apps/dota2/images/abilities/keeper_of_the_light_illuminate_md.png",
+        "slug": "keeper_of_the_light_illuminate",
+        "hero": "Keeper of the Light",
+        "aghs": "Allows Illuminate to heal allies for 100%% of its damage values during daytime."
+      }
+    ]
   },
   "visage": {
     "name": "Visage",
