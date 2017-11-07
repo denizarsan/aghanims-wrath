@@ -42,6 +42,6 @@ export default {
 }
 
 .hero.is-selected {
-  filter: grayscale(0%);
+  filter: drop-shadow(0 0 0.25em #209CEE);
 }
 </style>
