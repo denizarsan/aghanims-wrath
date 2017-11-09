@@ -1,67 +1,139 @@
 const axios = require('axios');
 const fs = require('fs');
+const path = require('path');
+const log = require('./logger');
 
-// ****************************************
-//                Constants
-// ****************************************
+// ********************************
+//            Constants
+// ********************************
 
-// Keys
-const AD_ABILITIES_KEY = 'AbilityDraftAbilities';
-const AD_DISABLED_KEY = 'AbilityDraftDisabled';
-const AD_UNIQ_ABILITIES_KEY = 'AbilityDraftUniqueAbilities';
-const AGHS_ABILITY_PREFIX = 'DOTA_Tooltip_ability_';
-const AGHS_ABILITY_SUFFIX = '_aghanim_description';
+// Output
+const OUTPUT_DIR = './src/assets/';
+const OUTPUT_FILE = 'data.json';
+
+// Endpoints
+const ENDPOINT_STRING = 'https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/resource/dota_english.json';
+const ENDPOINT_HEROES = 'https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/scripts/npc/npc_heroes.json';
+const ENDPOINT_ABILITIES = 'https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/scripts/npc/npc_abilities.json';
+
+// Top-level keys for heroes and abilities
+const HEROES_KEY = 'DOTAHeroes';
+const ABILITIES_KEY = 'DOTAAbilities';
+
+// Constants for processing JSON responses
 const HERO_PREFIX = 'npc_dota_hero_';
-const TALENT_KEY = 'special';
+const ABILITY_PREFIX = 'DOTA_Tooltip_ability_';
+const ABILITY_DESCRIPTION_SUFFIX = '_Description';
+const ABILITY_AGHANIM_DESCRIPTION_SUFFIX = '_aghanim_description';
+const ABILITY_BEHAVIOR_KEY = 'AbilityBehavior';
+const ABILITY_BEHAVIOR_HIDDEN = 'DOTA_ABILITY_BEHAVIOR_HIDDEN';
+const ABILITY_TYPE_KEY = 'AbilityType';
+const ABILITY_TYPE_ULTIMATE = 'DOTA_ABILITY_TYPE_ULTIMATE';
+const ABILITY_KEY_REGEX = /Ability([0-9]+)/;
+const TARGET_DUMMY_KEY = 'npc_dota_hero_target_dummy';
+const AD_DISABLED_KEY = 'AbilityDraftDisabled';
+const AD_ABILITIES_KEY = 'AbilityDraftAbilities';
 
-// Items
-const AGHANIMS_SCEPTER = 'Aghanim\'s Scepter';
-
-// Heroes
+// Hero slugs
 const GYROCOPTER = 'gyrocopter';
 const NIGHT_STALKER = 'night_stalker';
-const SKYWRATH = 'skywrath_mage';
+const SKYWRATH_MAGE = 'skywrath_mage';
+const KOTL = 'keeper_of_the_light';
 
-// Abilities
-const ANCIENT_SEAL = 'skywrath_mage_ancient_seal';
-const ARCANE_BOLT = 'skywrath_mage_arcane_bolt';
-const CALL_DOWN = 'gyrocopter_call_down';
-const CONCUSSIVE_SHOT = 'skywrath_mage_concussive_shot';
-const DARKNESS = 'night_stalker_darkness';
-const ILLUMINATE = 'keeper_of_the_light_illuminate';
-const ILLUMINATE_SF = 'keeper_of_the_light_spirit_form_illuminate';
-const MYSTIC_FLARE = 'skywrath_mage_mystic_flare';
+// Ability slugs
+const KOTL_SPIRIT_FORM_ILLUMINATE = 'keeper_of_the_light_spirit_form_illuminate';
+const GENERIC_HIDDEN = 'generic_hidden';
 
-const abilitiesToRemove = [
-  { hero: GYROCOPTER, slug: CALL_DOWN },
-  { hero: NIGHT_STALKER, slug: DARKNESS },
-];
+// ********************************
+//             Helpers
+// ********************************
 
-const missingSkywrathAbilities = [
-  ARCANE_BOLT,
-  CONCUSSIVE_SHOT,
-  ANCIENT_SEAL,
-];
+/**
+ * Creates a hero object
+ * @param {string} heroKey - key for the hero
+ * @param {Object} strings - JSON object for strings
+ * @return {Object} A new hero object with no abilities
+ */
+const createHero = (heroKey, strings) => {
+  const slug = heroKey.replace(HERO_PREFIX, '');
+  return {
+    name: strings[heroKey],
+    slug,
+    img: `http://cdn.dota2.com/apps/dota2/images/heroes/${slug}_full.png`,
+    icon: `http://cdn.dota2.com/apps/dota2/images/heroes/${slug}_icon.png`,
+    abilities: [],
+  };
+};
 
+/**
+ * Creates an ability object
+ * @param {string} abilityKey - key for the ability
+ * @param {Object} strings - JSON object for strings
+ * @return {Object} A new ability object
+ */
+const createAbility = (abilityKey, heroKey, strings) => {
+  const orginalAbilityKey = ABILITY_PREFIX + abilityKey;
+  return {
+    name: strings[orginalAbilityKey],
+    desc: strings[orginalAbilityKey + ABILITY_DESCRIPTION_SUFFIX],
+    img: `http://cdn.dota2.com/apps/dota2/images/abilities/${abilityKey}_md.png`,
+    slug: abilityKey,
+    hero: strings[HERO_PREFIX + heroKey],
+    aghs: strings[orginalAbilityKey + ABILITY_AGHANIM_DESCRIPTION_SUFFIX],
+  };
+};
 
-// ****************************************
-//                Resources
-// ****************************************
-const getHeroes = () => {
-  const url = 'https://api.opendota.com/api/heroes';
+// ********************************
+//            Resources
+// ********************************
+
+/**
+ * Makes a call to ENDPOINT_STRING and returns the results
+ * @return {Object} JSON object for strings
+ */
+const getStrings = () => {
+  const url = ENDPOINT_STRING;
+  const config = {};
+
+  return axios.get(url, config);
+};
+
+/**
+ * Makes a call to ENDPOINT_HEROES, formats and returns the results
+ * @param {Object} strings - JSON object for strings
+ * @return {Object} Formatted JSON object for heroes combined with strings
+ */
+const getHeroes = (strings) => {
+  const url = ENDPOINT_HEROES;
   const config = {
     transformResponse: axios.defaults.transformResponse.concat((response) => {
+      const data = response[HEROES_KEY];
       const heroes = {};
 
-      response.forEach((hero) => {
-        const key = hero.name.replace(HERO_PREFIX, '');
-        heroes[key] = {
-          name: hero.localized_name,
-          slug: key,
-          img: `http://cdn.dota2.com/apps/dota2/images/heroes/${key}_full.png`,
-          icon: `http://cdn.dota2.com/apps/dota2/images/heroes/${key}_icon.png`,
-        };
-      });
+      Object.keys(data)
+        .filter(key => key.includes(HERO_PREFIX))
+        .filter(key => key !== TARGET_DUMMY_KEY)
+        .filter(key => !Object.hasOwnProperty.call(data[key], AD_DISABLED_KEY))
+        .forEach((heroKey) => {
+          const newHeroKey = heroKey.replace(HERO_PREFIX, '');
+          heroes[newHeroKey] = createHero(heroKey, strings);
+
+          if (data[heroKey][AD_ABILITIES_KEY]) {
+            Object.values(data[heroKey][AD_ABILITIES_KEY]).forEach((abilityKey) => {
+              heroes[newHeroKey].abilities.push(createAbility(abilityKey, newHeroKey, strings));
+            });
+          } else {
+            Object.keys(data[heroKey]).forEach((key) => {
+              const abilityMatch = key.match(ABILITY_KEY_REGEX);
+              if (abilityMatch
+                && parseInt(abilityMatch[1], 10) < 10
+                && data[heroKey][key] !== GENERIC_HIDDEN) {
+                const newAbility = createAbility(data[heroKey][key], newHeroKey, strings);
+                heroes[newHeroKey].abilities.push(newAbility);
+              }
+            });
+          }
+        });
 
       return heroes;
     }),
@@ -70,203 +142,77 @@ const getHeroes = () => {
   return axios.get(url, config);
 };
 
-const getAbilities = () => {
-  const url = 'https://raw.githubusercontent.com/odota/dotaconstants/master/build/abilities.json';
+/**
+ * Makes a call to ENDPOINT_ABILITIES, formats and returns the results
+ * @param {Object} heroes - JSON object for heroes
+ * @return {Object} Augmented and filtered JSON object for heroes
+ */
+const addAbilityMetadata = (heroes) => {
+  const url = ENDPOINT_ABILITIES;
   const config = {
     transformResponse: axios.defaults.transformResponse.concat((response) => {
-      const abilities = {};
+      const data = response[ABILITIES_KEY];
+      const newHeroes = JSON.parse(JSON.stringify(heroes));
 
-      Object.keys(response)
-        .filter(key => !key.includes(TALENT_KEY))
-        .forEach((key) => {
-          abilities[key] = {
-            name: response[key].dname,
-            description: response[key].desc,
-            img: `http://cdn.dota2.com/apps/dota2/images/abilities/${key}_md.png`,
-            slug: key,
-          };
-        });
-
-      return abilities;
-    }),
-  };
-
-  return axios.get(url, config);
-};
-
-const getHeroAbilities = () => {
-  const url = 'https://raw.githubusercontent.com/odota/dotaconstants/master/build/hero_abilities.json';
-  const config = {
-    transformResponse: axios.defaults.transformResponse.concat((response) => {
-      Object.keys(response).forEach((key) => {
-        const newKey = key.replace(HERO_PREFIX, '');
-        response[newKey] = {};
-        response[newKey].abilities = response[key].abilities;
-        delete response[key];
+      Object.keys(newHeroes).forEach((hero) => {
+        newHeroes[hero].abilities =
+          newHeroes[hero].abilities
+            .filter(ability =>
+              !data[ability.slug][ABILITY_BEHAVIOR_KEY].includes(ABILITY_BEHAVIOR_HIDDEN))
+            .map((ability) => {
+              const ultObj = {
+                isUltimate: data[ability.slug][ABILITY_TYPE_KEY] === ABILITY_TYPE_ULTIMATE,
+              };
+              return Object.assign(ability, ultObj);
+            });
       });
 
-      return response;
+      return newHeroes;
     }),
   };
 
   return axios.get(url, config);
 };
 
-const getAghsAbilityDescriptions = () => {
-  const url = 'https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/resource/dota_english.json';
-  const config = {
-    transformResponse: axios.defaults.transformResponse.concat((response) => {
-      const data = response.lang.Tokens;
-      const abilities = {};
+/**
+ * Updates the data in './src/assets/data.json'
+ */
+const updateData = () => {
+  log.wait('Updating data...', 'data');
+  getStrings().then((stringsResponse) => {
+    const strings = stringsResponse.data.lang.Tokens;
 
-      Object.keys(data)
-        .filter(key => key.includes(AGHS_ABILITY_SUFFIX))
-        .forEach((key) => {
-          const newKey = key.replace(AGHS_ABILITY_PREFIX, '').replace(AGHS_ABILITY_SUFFIX, '');
-          abilities[newKey] = data[key];
-        });
+    getHeroes(strings).then((heroesResponse) => {
+      const heroes = heroesResponse.data;
 
-      return abilities;
-    }),
-  };
+      addAbilityMetadata(heroes).then((abilityMetadataResponse) => {
+        const data = abilityMetadataResponse.data;
 
-  return axios.get(url, config);
+        // Add Skywrath Mage's missing Aghanim upgrade descriptions
+        data[SKYWRATH_MAGE].abilities[0].aghs = data[SKYWRATH_MAGE].abilities[3].aghs;
+        data[SKYWRATH_MAGE].abilities[1].aghs = data[SKYWRATH_MAGE].abilities[3].aghs;
+        data[SKYWRATH_MAGE].abilities[2].aghs = data[SKYWRATH_MAGE].abilities[3].aghs;
+
+        // Add Keeper of the Light's missing Illuminate Aghanim upgrade description
+        data[KOTL].abilities[0].aghs =
+          strings[ABILITY_PREFIX +
+            KOTL_SPIRIT_FORM_ILLUMINATE +
+            ABILITY_AGHANIM_DESCRIPTION_SUFFIX];
+
+        // Remove hero bound Aghanim upgrade decsriptions
+        delete data[GYROCOPTER].abilities[3].aghs;
+        delete data[NIGHT_STALKER].abilities[3].aghs;
+
+        if (!fs.existsSync(OUTPUT_DIR)) {
+          fs.mkdirSync(OUTPUT_DIR);
+          log.info(`Created directory ${OUTPUT_DIR}`);
+        }
+
+        fs.writeFileSync(path.join(OUTPUT_DIR, OUTPUT_FILE), JSON.stringify(data, null, 2));
+        log.done('Updated data successfully', 'data');
+      });
+    });
+  });
 };
 
-const getADData = () => {
-  const url = 'https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/scripts/npc/npc_heroes.json';
-  const config = {
-    transformResponse: axios.defaults.transformResponse.concat((response) => {
-      const data = response.DOTAHeroes;
-      const adHeroAbilities = {};
-      const adUniqueHeroAbilities = {};
-      const unavailableHeroes = [];
-
-      Object.keys(data)
-        .filter(key => hasOwnProperty.call(data[key], AD_ABILITIES_KEY))
-        .forEach((key) => {
-          const newKey = key.replace(HERO_PREFIX, '');
-          adHeroAbilities[newKey] = {};
-          adHeroAbilities[newKey].abilities = Object.values(data[key][AD_ABILITIES_KEY]);
-        });
-
-      Object.keys(data)
-        .filter(key => hasOwnProperty.call(data[key], AD_UNIQ_ABILITIES_KEY))
-        .forEach((key) => {
-          const newKey = key.replace(HERO_PREFIX, '');
-          adUniqueHeroAbilities[newKey] = {};
-          adUniqueHeroAbilities[newKey].uniques = Object.values(data[key][AD_UNIQ_ABILITIES_KEY]);
-        });
-
-      Object.keys(data)
-        .filter(key => data[key][AD_DISABLED_KEY] === '1')
-        .forEach((key) => {
-          unavailableHeroes.push(key.replace(HERO_PREFIX, ''));
-        });
-
-      return {
-        adHeroAbilities,
-        // adUniqueHeroAbilities,
-        unavailableHeroes };
-    }),
-  };
-
-  return axios.get(url, config);
-};
-
-const resources = [
-  getHeroes(),
-  getAbilities(),
-  getHeroAbilities(),
-  getAghsAbilityDescriptions(),
-  getADData(),
-];
-
-// ****************************************
-//                Processing
-// ****************************************
-axios.all(resources)
-  .then(axios.spread((
-    heroesResponse,
-    abilitiesResponse,
-    heroAbilitiesResponse,
-    aghsAbilityDescriptionsResponse,
-    adDataResponse) => {
-    // Get response data
-    const heroes = heroesResponse.data;
-    const abilities = abilitiesResponse.data;
-    const heroAbilities = heroAbilitiesResponse.data;
-    const aghsAbilityDescriptions = aghsAbilityDescriptionsResponse.data;
-    const adHeroAbilities = adDataResponse.data.adHeroAbilities;
-    // const adUniqueHeroAbilities = adDataResponse.data.adUniqueHeroAbilities;
-    const unavailableHeroes = adDataResponse.data.unavailableHeroes;
-
-    // Initialize intermediate data to be constructed from response data
-    const availableHeros = {};
-    const aghsAbilities = {};
-    const aghsHeroAbilities = {};
-
-    // Need only available heroes
-    Object.keys(heroes).forEach((key) => {
-      if (!unavailableHeroes.includes(key)) {
-        availableHeros[key] = heroes[key];
-      }
-    });
-
-    // Need only upgradable abilities
-    Object.keys(abilities).forEach((key) => {
-      if (abilities[key].description && abilities[key].description.includes(AGHANIMS_SCEPTER)) {
-        aghsAbilities[key] = abilities[key];
-      }
-    });
-
-    // Need ability draft specific ability lists
-    Object.keys(adHeroAbilities).forEach((key) => {
-      heroAbilities[key].abilities = adHeroAbilities[key].abilities;
-    });
-
-    // Need only available heroes and upgradable abilities
-    Object.keys(heroAbilities).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(availableHeros, key)) {
-        const filteredAbilities = heroAbilities[key].abilities
-          .filter(ability => Object.prototype.hasOwnProperty.call(aghsAbilities, ability));
-        aghsHeroAbilities[key] = { abilities: filteredAbilities };
-      }
-    });
-
-    // Add Skywrath Mage's missing abilities
-    missingSkywrathAbilities.forEach((ability) => {
-      aghsHeroAbilities[SKYWRATH].abilities.push(ability);
-      aghsAbilities[ability] = abilities[ability];
-      aghsAbilityDescriptions[ability] = aghsAbilityDescriptions[MYSTIC_FLARE];
-    });
-
-    // Remove abilities to remove
-    abilitiesToRemove.forEach((ability) => {
-      aghsHeroAbilities[ability.hero].abilities
-        .splice(aghsHeroAbilities[ability.hero].abilities.indexOf(ability.slug), 1);
-      delete aghsAbilities[ability.slug];
-      delete aghsAbilityDescriptions[ability.slug];
-    });
-
-    // Replace kotl spirit form illuminate with regular illuminate
-    aghsAbilityDescriptions[ILLUMINATE] = aghsAbilityDescriptions[ILLUMINATE_SF];
-    delete aghsAbilityDescriptions[ILLUMINATE_SF];
-
-    // Initialize resulting data
-    const data = {};
-
-    // Go through each available hero and populate their abilities
-    Object.keys(availableHeros).forEach((key) => {
-      data[key] = Object.assign(availableHeros[key], aghsHeroAbilities[key]);
-      data[key].abilities = data[key].abilities.map(ability =>
-        Object.assign(aghsAbilities[ability], {
-          hero: availableHeros[key].name,
-          aghs: aghsAbilityDescriptions[ability],
-        }));
-    });
-
-    // Write data to file
-    fs.writeFileSync('./src/assets/data.json', JSON.stringify(data, null, 2));
-  },
-  ));
+updateData();

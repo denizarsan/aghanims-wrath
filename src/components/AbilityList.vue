@@ -9,9 +9,10 @@
       <div class="media-content">
         <div class="content">
           <p>
-            <strong>{{ ability.hero }}</strong> - <strong>{{ ability.name }}</strong>
+            <span class="ability-name">{{ ability.name }}</span>
+            <span class="ability-ultimate" v-if="ability.isUltimate">Ultimate</span>
             <br>
-            {{ ability.aghs }}
+            <span class="ability-aghs">{{ ability.aghs }}</span>
           </p>
         </div>
       </div>
@@ -25,3 +26,16 @@ export default {
   props: ['abilities'],
 };
 </script>
+
+<style scoped>
+.ability-name {
+  font-weight: bold;
+}
+
+.ability-ultimate {
+  font-weight: bolder;
+  text-transform: uppercase;
+  color: #209CEE;
+  padding: 0.5em;
+}
+</style>

@@ -105,7 +105,8 @@ export default {
     },
     onHeroSelected(hero) {
       // Add new abilities to the list of all abilities
-      this.abilities = [...this.abilities, ...Data[hero.slug].abilities];
+      this.abilities =
+        [...this.abilities, ...Data[hero.slug].abilities.filter(ability => ability.aghs)];
 
       // Remove duplicates
       this.abilities = [...new Set(this.abilities)];
