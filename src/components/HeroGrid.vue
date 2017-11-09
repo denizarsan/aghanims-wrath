@@ -5,7 +5,7 @@
          v-for="hero in heroes"
          v-show="isHeroFiltered(hero)"
          @click="onHeroClick(hero)">
-      <img :src="hero.icon"/>
+      <img :src="getImgSrc(hero)"/>
     </div>
   </div>
 </template>
@@ -23,6 +23,9 @@ export default {
     },
     onHeroClick(hero) {
       this.$emit(this.selectedHeroes.indexOf(hero) > -1 ? 'hero-unselected' : 'hero-selected', hero);
+    },
+    getImgSrc(hero) {
+      return `/static/images/${hero.slug}_icon.png`;
     },
   },
 };
