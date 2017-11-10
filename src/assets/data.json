@@ -1797,7 +1797,7 @@
     "abilities": [
       {
         "name": "Poison Touch",
-        "desc": "Releases a cone of poisonous magic that strikes multiple enemy units. Deals damage over time and slows the targets. Anytime the targets get attacked, the debuff duration is refreshed ",
+        "desc": "Releases a cone of poisonous magic that strikes multiple enemy units. Deals damage over time and slows the targets. Anytime the targets get attacked, the debuff duration is refreshed.",
         "img": "http://cdn.dota2.com/apps/dota2/images/abilities/dazzle_poison_touch_md.png",
         "slug": "dazzle_poison_touch",
         "hero": "Dazzle",
@@ -3359,7 +3359,7 @@
         "img": "http://cdn.dota2.com/apps/dota2/images/abilities/medusa_mystic_snake_md.png",
         "slug": "medusa_mystic_snake",
         "hero": "Medusa",
-        "aghs": "Causes Mystic Snake to turn enemies into stone for 1 second, increases by  %stone_form_scepter_increment% seconds per bounce.",
+        "aghs": "Causes Mystic Snake to turn enemies into stone for %stone_form_scepter_base% second, increases by  %stone_form_scepter_increment% seconds per bounce.",
         "isUltimate": false
       },
       {

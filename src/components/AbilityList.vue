@@ -5,7 +5,7 @@
       <article class="media" v-for="ability in getRegulars()">
         <figure class="media-left">
           <p class="image is-64x64">
-            <img :src="ability.img">
+            <img :src="getImgSrc(ability)">
           </p>
         </figure>
         <div class="media-content">
@@ -24,7 +24,7 @@
       <article class="media" v-for="ability in getUltimates()">
         <figure class="media-left">
           <p class="image is-64x64">
-            <img :src="ability.img">
+            <img :src="getImgSrc(ability)">
           </p>
         </figure>
         <div class="media-content">
@@ -51,6 +51,9 @@ export default {
     },
     getRegulars() {
       return this.abilities.filter(ability => !ability.isUltimate);
+    },
+    getImgSrc(ability) {
+      return `/static/images/${ability.slug}_md.png`;
     },
   },
 };
