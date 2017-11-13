@@ -1,8 +1,8 @@
 <template>
   <div class="ability-list columns">
-    <div class="list column"  v-if="getRegulars().length">
-      <h4 class="subtitle is-4">Regular Abilities</h4>
-      <article class="media" v-for="ability in getRegulars()">
+    <div class="list column"  v-if="getStandards().length">
+      <h4 class="subtitle is-4">Standard Abilities</h4>
+      <article class="media" v-for="ability in getStandards()">
         <figure class="media-left">
           <p class="image is-64x64">
             <img :src="ability.img">
@@ -49,7 +49,7 @@ export default {
     getUltimates() {
       return this.abilities.filter(ability => ability.isUltimate);
     },
-    getRegulars() {
+    getStandards() {
       return this.abilities.filter(ability => !ability.isUltimate);
     },
   },
