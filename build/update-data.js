@@ -55,12 +55,13 @@ const GENERIC_HIDDEN = 'generic_hidden';
  * @return {Object} A new hero object with no abilities
  */
 const createHero = (heroKey, strings) => {
-  const slug = heroKey.replace(HERO_PREFIX, '');
+  const hero = heroKey.replace(HERO_PREFIX, '');
   return {
     name: strings[heroKey],
-    slug,
-    img: `http://cdn.dota2.com/apps/dota2/images/heroes/${slug}_full.png`,
-    icon: `http://cdn.dota2.com/apps/dota2/images/heroes/${slug}_icon.png`,
+    hero,
+    img: `http://cdn.dota2.com/apps/dota2/images/heroes/${hero}_full.png`,
+    icon: `http://cdn.dota2.com/apps/dota2/images/heroes/${hero}_icon.png`,
+    src: `/static/images/${hero}_icon.png`,
     abilities: [],
   };
 };
@@ -77,8 +78,9 @@ const createAbility = (abilityKey, heroKey, strings) => {
     name: strings[orginalAbilityKey],
     desc: strings[orginalAbilityKey + ABILITY_DESCRIPTION_SUFFIX],
     img: `http://cdn.dota2.com/apps/dota2/images/abilities/${abilityKey}_md.png`,
+    src: `/static/images/${abilityKey}_md.png`,
     slug: abilityKey,
-    hero: strings[HERO_PREFIX + heroKey],
+    hero: heroKey,
     aghs: strings[orginalAbilityKey + ABILITY_AGHANIM_DESCRIPTION_SUFFIX],
   };
 };

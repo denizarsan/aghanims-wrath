@@ -15,7 +15,17 @@
 
     <div class="container">
       <section class="section">
-        <h1 class="title has-text-centered">First, select heroes available in your draft</h1>
+        <h1 class="title has-text-centered">
+          First, select
+          <span class="select">
+            <select v-model="mode">
+              <option value="hero">heroes</option>
+              <option value="ultimate">ultimates</option>
+            </select>
+          </span>
+          available in your draft
+        </h1>
+
         <div class="field">
           <div class="control has-icons-left">
             <input class="input is-info" type="text" placeholder="Search..." v-model="query">
@@ -25,12 +35,22 @@
           </div>
         </div>
 
-        <hero-grid :heroes="heroes"
+        <item-grid :items="heroes"
+                   :selected="selected"
                    :query="query"
-                   :selected-heroes="selectedHeroes"
-                   @hero-selected="onHeroSelected"
-                   @hero-unselected="onHeroUnselected">
-        </hero-grid>
+                   :more-space="true"
+                   @item-selected="onItemSelected"
+                   @item-unselected="onItemUnselected"
+                   v-if="mode === 'hero'">
+        </item-grid>
+
+        <item-grid :items="ultimates"
+                   :selected="selected"
+                   :query="query"
+                   @item-selected="onItemSelected"
+                   @item-unselected="onItemUnselected"
+                   v-if="mode === 'ultimate'">
+        </item-grid>
 
         <div class="control has-addons has-text-centered" v-if="abilities.length" @click="onResetClick">
           <a class="button is-info">
@@ -70,7 +90,7 @@
 import Data from './assets/data.json';
 
 import AbilityList from './components/AbilityList';
-import HeroGrid from './components/HeroGrid';
+import ItemGrid from './components/ItemGrid';
 
 // Comparators for sorting
 const heroComparator = (a, b) => {
@@ -85,28 +105,34 @@ const abilityComparator = (a, b) => {
   return 0;
 };
 
+const heroes = Object.values(Data).sort(heroComparator);
+const ultimates = [].concat(...Object.values(Data)
+                    .map(hero => hero.abilities.filter(ability => ability.isUltimate))
+                    .sort(abilityComparator));
 export default {
   name: 'app',
-  components: { AbilityList, HeroGrid },
+  components: { AbilityList, ItemGrid },
   data() {
     return {
       abilities: [],
-      heroes: Object.values(Data).sort(heroComparator),
-      selectedHeroes: [],
+      heroes,
+      ultimates,
+      selected: [],
       query: '',
+      mode: 'hero',
     };
   },
   methods: {
     onResetClick() {
       // Reset everything
       this.abilities = [];
-      this.selectedHeroes = [];
+      this.selected = [];
       this.query = '';
     },
-    onHeroSelected(hero) {
+    onItemSelected(item) {
       // Add new abilities to the list of all abilities
       this.abilities =
-        [...this.abilities, ...Data[hero.slug].abilities.filter(ability => ability.aghs)];
+        [...this.abilities, ...Data[item.hero].abilities.filter(ability => ability.aghs)];
 
       // Remove duplicates
       this.abilities = [...new Set(this.abilities)];
@@ -115,17 +141,17 @@ export default {
       this.abilities.sort(abilityComparator);
 
       // Add hero to selected heroes
-      this.selectedHeroes.push(hero);
+      this.selected.push(item.hero);
 
       // Clear the search query
       this.query = '';
     },
-    onHeroUnselected(hero) {
+    onItemUnselected(item) {
       // Remove abilities of the hero from the list of all abilities
-      this.abilities = this.abilities.filter(ability => ability.hero !== hero.name);
+      this.abilities = this.abilities.filter(ability => ability.hero !== item.hero);
 
       // Remove hero from the list of selected heroes
-      this.selectedHeroes.splice(this.selectedHeroes.indexOf(hero), 1);
+      this.selected.splice(this.selected.indexOf(item.hero), 1);
     },
   },
 };
@@ -136,6 +162,12 @@ export default {
   width: 300px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.select {
+  font-size: 1rem;
+  padding-left: 0.5rem;
+  padding-left: 0.5rem;
 }
 
 .upgrades {
