@@ -663,7 +663,7 @@
       },
       {
         "name": "Toss",
-        "desc": "Grabs the nearest unit in a 275 radius around Tiny, ally or enemy, and launches it at the target unit or rune to deal damage where they land.  If the tossed unit is an enemy, it will take an extra 20%% damage. Toss does more damage with each level in Grow.",
+        "desc": "Grabs the nearest unit in a 275 radius around Tiny, ally or enemy, and launches it at the target unit or rune to deal damage where they land.  If the tossed unit is an enemy, it will take an extra 20%% damage.",
         "img": "http://cdn.dota2.com/apps/dota2/images/abilities/tiny_toss_md.png",
         "slug": "tiny_toss",
         "hero": "Tiny",
