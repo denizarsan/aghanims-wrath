@@ -81,6 +81,7 @@ const createAbility = (abilityKey, heroKey, strings) => {
     src: `/static/images/${abilityKey}_md.png`,
     slug: abilityKey,
     hero: heroKey,
+    heroName: strings[HERO_PREFIX + heroKey],
     aghs: strings[orginalAbilityKey + ABILITY_AGHANIM_DESCRIPTION_SUFFIX],
   };
 };

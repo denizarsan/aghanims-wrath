@@ -100,15 +100,15 @@ const heroComparator = (a, b) => {
 };
 
 const abilityComparator = (a, b) => {
-  if (a.hero > b.hero) { return 1; }
-  if (a.hero < b.hero) { return -1; }
+  if (a.heroName > b.heroName) { return 1; }
+  if (a.heroName < b.heroName) { return -1; }
   return 0;
 };
 
 const heroes = Object.values(Data).sort(heroComparator);
 const ultimates = [].concat(...Object.values(Data)
-                    .map(hero => hero.abilities.filter(ability => ability.isUltimate))
-                    .sort(abilityComparator));
+                    .map(hero => hero.abilities.filter(ability => ability.isUltimate)))
+                    .sort(abilityComparator);
 export default {
   name: 'app',
   components: { AbilityList, ItemGrid },
