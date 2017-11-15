@@ -1,7 +1,7 @@
 {
   "name": "aghanims-wrath",
   "version": "0.1.0",
-  "description": "A tool that shows skills upgradable by Aghanim's Scepter per selected hero in Ability Draft mode in Dota 2",
+  "description": "A tool that shows skills upgradable by Aghanim's Scepter per selected hero/ultimate in Ability Draft mode in Dota 2",
   "author": "denizarsan <deniz.arsan@gmail.com>",
   "private": true,
   "scripts": {
@@ -10,7 +10,8 @@
     "lint": "./node_modules/eslint/bin/eslint.js --ext .js,.vue src",
     "update": "node build/update-data.js && node build/update-images.js",
     "update-data": "node build/update-data.js",
-    "update-images": "node build/update-images.js"
+    "update-images": "node build/update-images.js",
+    "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
     "vue": "^2.1.10"
