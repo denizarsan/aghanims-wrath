@@ -52,7 +52,7 @@
                    v-if="mode === 'ultimate'">
         </item-grid>
 
-        <div class="control has-addons has-text-centered" v-if="abilities.length" @click="onResetClick">
+        <div class="control has-addons has-text-centered" v-if="selected.length" @click="onResetClick">
           <a class="button is-info">
             <span class="icon">
               <i class="fa fa-refresh"></i>
