@@ -46,7 +46,7 @@
                    :more-space="true"
                    @item-selected="onItemSelected"
                    @item-unselected="onItemUnselected"
-                   v-if="isActive('hero')">
+                   v-show="isActive('hero')">
         </item-grid>
 
         <item-grid :items="ultimates"
@@ -54,7 +54,7 @@
                    :query="query"
                    @item-selected="onItemSelected"
                    @item-unselected="onItemUnselected"
-                   v-if="isActive('ultimate')">
+                   v-show="isActive('ultimate')">
         </item-grid>
 
         <div class="control has-addons has-text-centered" v-if="selected.length" @click="onResetClick">
@@ -111,9 +111,11 @@ const abilityComparator = (a, b) => {
 };
 
 const heroes = Object.values(Data).sort(heroComparator);
-const ultimates = [].concat(...Object.values(Data)
-                    .map(hero => hero.abilities.filter(ability => ability.isUltimate)))
-                    .sort(abilityComparator);
+
+const ultimates = Object.values(Data)
+                    .map(hero => hero.abilities.filter(ability => ability.isUltimate))
+                    .reduce((a, b) => a.concat(b)) // flatten
+                    .sort(abilityComparator); // sort by hero name
 export default {
   name: 'app',
   components: { AbilityList, ItemGrid },
