@@ -106,9 +106,11 @@ const abilityComparator = (a, b) => {
 };
 
 const heroes = Object.values(Data).sort(heroComparator);
-const ultimates = [].concat(...Object.values(Data)
-                    .map(hero => hero.abilities.filter(ability => ability.isUltimate)))
-                    .sort(abilityComparator);
+
+const ultimates = Object.values(Data)
+                    .map(hero => hero.abilities.filter(ability => ability.isUltimate))
+                    .reduce((a, b) => a.concat(b)) // flatten
+                    .sort(abilityComparator); // sort by hero name
 export default {
   name: 'app',
   components: { AbilityList, ItemGrid },
