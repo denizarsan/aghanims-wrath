@@ -46,7 +46,7 @@
                    :more-space="true"
                    @item-selected="onItemSelected"
                    @item-unselected="onItemUnselected"
-                   v-if="mode === 'hero'">
+                   v-if="isActive('hero')">
         </item-grid>
 
         <item-grid :items="ultimates"
@@ -54,7 +54,7 @@
                    :query="query"
                    @item-selected="onItemSelected"
                    @item-unselected="onItemUnselected"
-                   v-if="mode === 'ultimate'">
+                   v-if="isActive('ultimate')">
         </item-grid>
 
         <div class="control has-addons has-text-centered" v-if="selected.length" @click="onResetClick">
