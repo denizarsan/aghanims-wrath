@@ -17,11 +17,16 @@
       <section class="section">
         <h1 class="title has-text-centered">
           First, select
-          <span class="select">
-            <select v-model="mode">
-              <option value="hero">heroes</option>
-              <option value="ultimate">ultimates</option>
-            </select>
+          <span class="mode"
+            :class="mode === 'hero' ? 'has-text-info' : 'has-text-grey-light'"
+            @click="selectMode('hero')">
+            heroes
+          </span>
+          /
+          <span class="ode"
+            :class="mode === 'ultimate' ? 'has-text-info' : 'has-text-grey-light'"
+            @click="selectMode('ultimate')">
+            ultimates
           </span>
           available in your draft
         </h1>
@@ -123,6 +128,9 @@ export default {
     };
   },
   methods: {
+    selectMode(mode) {
+      this.mode = mode;
+    },
     onResetClick() {
       // Reset everything
       this.abilities = [];
@@ -172,5 +180,10 @@ export default {
 
 .upgrades {
   margin-top: 3rem;
+}
+
+.mode {
+  transition: 0.4s color;
+  cursor: pointer;
 }
 </style>
