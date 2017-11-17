@@ -18,13 +18,13 @@
         <h1 class="title has-text-centered">
           First, select
           <span class="mode"
-            :class="mode === 'hero' ? 'has-text-info' : 'has-text-grey-light'"
+            :class="{ 'has-text-info': isActive('hero'), 'has-text-grey-light': !isActive('hero') }"
             @click="selectMode('hero')">
             heroes
           </span>
           /
-          <span class="ode"
-            :class="mode === 'ultimate' ? 'has-text-info' : 'has-text-grey-light'"
+          <span class="mode"
+            :class="{ 'has-text-info': isActive('ultimate'), 'has-text-grey-light': !isActive('ultimate') }"
             @click="selectMode('ultimate')">
             ultimates
           </span>
@@ -131,6 +131,9 @@ export default {
     selectMode(mode) {
       this.mode = mode;
     },
+    isActive(mode) {
+      return this.mode === mode;
+    },
     onResetClick() {
       // Reset everything
       this.abilities = [];
@@ -170,12 +173,6 @@ export default {
   width: 300px;
   margin-left: auto;
   margin-right: auto;
-}
-
-.select {
-  font-size: 1rem;
-  padding-left: 0.5rem;
-  padding-left: 0.5rem;
 }
 
 .upgrades {
