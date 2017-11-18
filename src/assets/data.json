@@ -8,7 +8,7 @@
     "abilities": [
       {
         "name": "Mana Break",
-        "desc": "Burns an opponent's mana on each attack.  Mana Break deals 60%% of the mana burned as damage to the target.",
+        "desc": "Burns an opponent's mana on each attack.  Mana Break deals 50%% of the mana burned as damage to the target.",
         "img": "http://cdn.dota2.com/apps/dota2/images/abilities/antimage_mana_break_md.png",
         "src": "/static/images/antimage_mana_break_md.png",
         "slug": "antimage_mana_break",
@@ -1626,7 +1626,7 @@
     "abilities": [
       {
         "name": "Fatal Bonds",
-        "desc": "Binds several enemy units together, causing %damage_share_percentage%%% of the damage dealt to one of them to be felt by the others.",
+        "desc": "Binds several enemy units together, causing a percentage of the damage dealt to one of them to be felt by the others.",
         "img": "http://cdn.dota2.com/apps/dota2/images/abilities/warlock_fatal_bonds_md.png",
         "src": "/static/images/warlock_fatal_bonds_md.png",
         "slug": "warlock_fatal_bonds",
