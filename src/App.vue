@@ -17,11 +17,16 @@
       <section class="section">
         <h1 class="title has-text-centered">
           First, select
-          <span class="select">
-            <select v-model="mode">
-              <option value="hero">heroes</option>
-              <option value="ultimate">ultimates</option>
-            </select>
+          <span class="mode"
+            :class="{ 'has-text-info': isActive('hero'), 'has-text-grey-light': !isActive('hero') }"
+            @click="selectMode('hero')">
+            heroes
+          </span>
+          /
+          <span class="mode"
+            :class="{ 'has-text-info': isActive('ultimate'), 'has-text-grey-light': !isActive('ultimate') }"
+            @click="selectMode('ultimate')">
+            ultimates
           </span>
           available in your draft
         </h1>
@@ -41,7 +46,7 @@
                    :more-space="true"
                    @item-selected="onItemSelected"
                    @item-unselected="onItemUnselected"
-                   v-show="mode === 'hero'">
+                   v-show="isActive('hero')">
         </item-grid>
 
         <item-grid :items="ultimates"
@@ -49,7 +54,7 @@
                    :query="query"
                    @item-selected="onItemSelected"
                    @item-unselected="onItemUnselected"
-                   v-show="mode === 'ultimate'">
+                   v-show="isActive('ultimate')">
         </item-grid>
 
         <div class="control has-addons has-text-centered" v-if="selected.length" @click="onResetClick">
@@ -125,6 +130,12 @@ export default {
     };
   },
   methods: {
+    selectMode(mode) {
+      this.mode = mode;
+    },
+    isActive(mode) {
+      return this.mode === mode;
+    },
     onResetClick() {
       // Reset everything
       this.abilities = [];
@@ -166,13 +177,12 @@ export default {
   margin-right: auto;
 }
 
-.select {
-  font-size: 1rem;
-  padding-left: 0.5rem;
-  padding-left: 0.5rem;
-}
-
 .upgrades {
   margin-top: 3rem;
+}
+
+.mode {
+  transition: 0.4s color;
+  cursor: pointer;
 }
 </style>
