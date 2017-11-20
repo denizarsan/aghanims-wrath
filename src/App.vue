@@ -81,10 +81,6 @@
           Design inspired partially from <a href="https://howdoiplay.com">Tsunami's Dota Hero Tips and Counters</a>.
           <br>
           <a href="http://www.dota2.com">Dota 2</a> is a registered trademark of <a href="http://www.valvesoftware.com/">Valve Corporation</a>.
-          <br>
-          <a class="icon is-large" href="https://github.com/denizarsan/aghanims-wrath">
-            <i class="fa fa-github fa-2x"></i>
-          </a>
         </div>
       </div>
     </section>
