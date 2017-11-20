@@ -43,7 +43,7 @@
         <item-grid :items="heroes"
                    :selected="selected"
                    :query="query"
-                   :more-space="true"
+                   :wide="true"
                    @item-selected="onItemSelected"
                    @item-unselected="onItemUnselected"
                    v-show="isActive('hero')">
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import Data from './assets/data.json';
+import Data from './assets/data/data.json';
 
 import AbilityList from './components/AbilityList';
 import ItemGrid from './components/ItemGrid';
@@ -170,19 +170,23 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$field-width: 300px;
+$upgrades-spacing: 3em;
+$mode-transition-speed: .4s;
+
 .field {
-  width: 300px;
+  width: $field-width;
   margin-left: auto;
   margin-right: auto;
 }
 
 .upgrades {
-  margin-top: 3rem;
+  margin-top: $upgrades-spacing;
 }
 
 .mode {
-  transition: 0.4s color;
+  transition: $mode-transition-speed color;
   cursor: pointer;
 }
 </style>

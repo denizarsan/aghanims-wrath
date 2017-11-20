@@ -11,7 +11,7 @@
         <div class="media-content">
           <div class="content">
             <p>
-              <span class="ability-name">{{ ability.name }}</span>
+              <strong class="ability-name">{{ ability.name }}</strong>
               <br>
               <span class="ability-aghs">{{ ability.aghs }}</span>
             </p>
@@ -30,7 +30,7 @@
         <div class="media-content">
           <div class="content">
             <p>
-              <span class="ability-name">{{ ability.name }}</span>
+              <strong class="ability-name">{{ ability.name }}</strong>
               <br>
               <span class="ability-aghs">{{ ability.aghs }}</span>
             </p>
@@ -58,9 +58,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.ability-name {
-  font-weight: bold;
-}
-</style>
