@@ -30,17 +30,13 @@ export default {
 
 <style lang="scss" scoped>
 @import '~bulma/sass/utilities/initial-variables.sass';
-// @import '~bulma/sass/utilities/derived-variables.sass';
-
-$item-spacing: 0.5rem;
-$item-spacing-sm: $item-spacing / 2;
-$item-spacing-lg: $item-spacing * 3;
+@import '~bulma/sass/utilities/derived-variables.sass';
 
 .itemGrid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: $item-spacing-lg;
+  margin-bottom: $size-large;
 
 }
 
@@ -48,7 +44,7 @@ $item-spacing-lg: $item-spacing * 3;
   filter: grayscale(100%);
   display: flex;
   align-items: center;
-  padding: $item-spacing-sm;
+  padding: $size-small / 3;
 
   &.is-selected {
     filter: grayscale(0%);
@@ -57,10 +53,10 @@ $item-spacing-lg: $item-spacing * 3;
 
 .item--wide {
   @extend .item;
-  padding: $item-spacing;
+  padding: $size-normal / 2;
 
   &.is-selected {
-    filter: drop-shadow(0 0 $item-spacing-sm $cyan);
+    filter: drop-shadow(0 0 $size-small / 3 $cyan);
   }
 }
 </style>

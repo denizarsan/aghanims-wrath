@@ -171,8 +171,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~bulma/sass/utilities/initial-variables.sass';
+@import '~bulma/sass/utilities/derived-variables.sass';
+
 $field-width: 300px;
-$upgrades-spacing: 3em;
 $mode-transition-speed: .4s;
 
 .field {
@@ -182,7 +184,7 @@ $mode-transition-speed: .4s;
 }
 
 .upgrades {
-  margin-top: $upgrades-spacing;
+  margin-top: $size-large * 2;
 }
 
 .mode {
