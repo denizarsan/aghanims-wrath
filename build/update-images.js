@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const log = require('./logger');
 
-const DATA_FILE = path.resolve('./src/assets/data.json');
+const DATA_FILE = path.resolve('./src/assets/data/data.json');
 const ASSETS_DIR = './static/images';
 const CDN_URL = 'http://cdn.dota2.com/apps/dota2/images/';
 
