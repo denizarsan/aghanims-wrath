@@ -3,6 +3,9 @@
 import Vue from 'vue';
 import App from './App';
 
+// Add an entry point for styles
+require('styles');
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

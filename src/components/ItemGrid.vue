@@ -1,8 +1,8 @@
 <template>
-  <div class="item-grid">
-    <div class="item"
-         :class="{ 'is-selected': isSelected(item), 'has-more-padding': moreSpace }"
+  <div class="itemGrid">
+    <div :class="{ 'item': !wide, 'item--wide': wide, 'is-selected': isSelected(item) }"
          v-for="item in items"
+         :key="item.hero"
          v-show="isFiltered(item)"
          @click="onClick(item)">
       <img :src="item.src"/>
@@ -13,7 +13,7 @@
 <script>
 export default {
   name: 'item-grid',
-  props: ['items', 'selected', 'query', 'moreSpace'],
+  props: ['items', 'selected', 'query', 'wide'],
   methods: {
     isFiltered(item) {
       return item.name.toLowerCase().includes(this.query.toLowerCase());
@@ -28,30 +28,35 @@ export default {
 };
 </script>
 
-<style scoped>
-.item-grid {
+<style lang="scss" scoped>
+@import '~bulma/sass/utilities/initial-variables.sass';
+@import '~bulma/sass/utilities/derived-variables.sass';
+
+.itemGrid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: $size-large;
+
 }
 
 .item {
   filter: grayscale(100%);
   display: flex;
   align-items: center;
-  padding: 0.25rem;
+  padding: $size-small / 3;
+
+  &.is-selected {
+    filter: grayscale(0%);
+  }
 }
 
-.item.is-selected {
-  filter: grayscale(0%);
-}
+.item--wide {
+  @extend .item;
+  padding: $size-normal / 2;
 
-.item.has-more-padding {
-  padding: 0.5rem;
-}
-
-.item.has-more-padding.is-selected {
-  filter: drop-shadow(0 0 0.25em #209CEE);
+  &.is-selected {
+    filter: drop-shadow(0 0 $size-small / 3 $cyan);
+  }
 }
 </style>

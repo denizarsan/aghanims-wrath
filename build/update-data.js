@@ -8,7 +8,7 @@ const log = require('./logger');
 // ********************************
 
 // Output
-const OUTPUT_DIR = './src/assets/';
+const OUTPUT_DIR = './src/assets/data/';
 const OUTPUT_FILE = 'data.json';
 
 // Endpoints
