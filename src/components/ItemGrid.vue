@@ -2,6 +2,7 @@
   <div class="itemGrid">
     <div :class="{ 'item': !wide, 'item--wide': wide, 'is-selected': isSelected(item) }"
          v-for="item in items"
+         :key="item.hero"
          v-show="isFiltered(item)"
          @click="onClick(item)">
       <img :src="item.src"/>
@@ -28,10 +29,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~bulma/sass/utilities/initial-variables.sass';
+// @import '~bulma/sass/utilities/derived-variables.sass';
+
 $item-spacing: 0.5rem;
 $item-spacing-sm: $item-spacing / 2;
 $item-spacing-lg: $item-spacing * 3;
-$drop-shadow-color: #209cee;
 
 .itemGrid {
   display: flex;
@@ -57,7 +60,7 @@ $drop-shadow-color: #209cee;
   padding: $item-spacing;
 
   &.is-selected {
-    filter: drop-shadow(0 0 $item-spacing-sm $drop-shadow-color);
+    filter: drop-shadow(0 0 $item-spacing-sm $cyan);
   }
 }
 </style>
