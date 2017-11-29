@@ -40,21 +40,13 @@
           </div>
         </div>
 
-        <item-grid :items="heroes"
+        <item-grid :items="displayedHeros"
                    :selected="selected"
                    :query="query"
-                   :wide="true"
+                   :wide="isActive('hero')"
+                   :mode="mode"
                    @item-selected="onItemSelected"
-                   @item-unselected="onItemUnselected"
-                   v-show="isActive('hero')">
-        </item-grid>
-
-        <item-grid :items="ultimates"
-                   :selected="selected"
-                   :query="query"
-                   @item-selected="onItemSelected"
-                   @item-unselected="onItemUnselected"
-                   v-show="isActive('ultimate')">
+                   @item-unselected="onItemUnselected">
         </item-grid>
 
         <div class="control has-addons has-text-centered" v-if="selected.length" @click="onResetClick">
@@ -106,24 +98,28 @@ const abilityComparator = (a, b) => {
   return 0;
 };
 
-const heroes = Object.values(Data).sort(heroComparator);
+const HEROES = Object.values(Data).sort(heroComparator);
+const HEROES_WITH_UPGRADABLE_ULTIMATES =
+  HEROES.filter(hero => hero.abilities.some(ability => ability.isUltimate));
 
-const ultimates = Object.values(Data)
-                    .map(hero => hero.abilities.filter(ability => ability.isUltimate))
-                    .reduce((a, b) => a.concat(b)) // flatten
-                    .sort(abilityComparator); // sort by hero name
 export default {
   name: 'app',
   components: { AbilityList, ItemGrid },
   data() {
     return {
       abilities: [],
-      heroes,
-      ultimates,
       selected: [],
       query: '',
       mode: 'hero',
     };
+  },
+  computed: {
+    displayedHeros() {
+      return this.isActive('hero') ? HEROES :
+      HEROES_WITH_UPGRADABLE_ULTIMATES.map(hero =>
+        hero.abilities.find(ability => ability.isUltimate),
+      );
+    },
   },
   methods: {
     selectMode(mode) {
@@ -149,7 +145,7 @@ export default {
       // Sort the list of all abilities alphabetically by hero name
       this.abilities.sort(abilityComparator);
 
-      // Add hero to selected heroes
+      // Add hero to selected HEROES
       this.selected.push(item.hero);
 
       // Clear the search query
@@ -159,7 +155,7 @@ export default {
       // Remove abilities of the hero from the list of all abilities
       this.abilities = this.abilities.filter(ability => ability.hero !== item.hero);
 
-      // Remove hero from the list of selected heroes
+      // Remove hero from the list of selected HEROES
       this.selected.splice(this.selected.indexOf(item.hero), 1);
     },
   },
@@ -187,4 +183,5 @@ $mode-transition-speed: .4s;
   transition: $mode-transition-speed color;
   cursor: pointer;
 }
+
 </style>
