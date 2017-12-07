@@ -2,7 +2,7 @@
 
 A tool that shows skills upgradable by Aghanim's Scepter per selected hero/ultimate in Ability Draft mode in Dota 2
 
-[Demo](aghanims-wrath.firebaseapp.com)
+[Demo](https://aghanims-wrath.firebaseapp.com/)
 
 ## Installation
 ``` bash
@@ -31,7 +31,7 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 
-# update data, build app and deploy to aghanims-wrath.firebaseapp.com
+# update data, build app and deploy to https://aghanims-wrath.firebaseapp.com/
 npm run deploy
 ```
 
