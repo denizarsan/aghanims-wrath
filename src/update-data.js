@@ -199,8 +199,8 @@ const updateData = () => {
         // Add Keeper of the Light's missing Illuminate Aghanim upgrade description
         data[KOTL].abilities[0].aghs =
           strings[ABILITY_PREFIX +
-            KOTL_SPIRIT_FORM_ILLUMINATE +
-            ABILITY_AGHANIM_DESCRIPTION_SUFFIX];
+          KOTL_SPIRIT_FORM_ILLUMINATE +
+          ABILITY_AGHANIM_DESCRIPTION_SUFFIX];
 
         // Remove hero bound Aghanim upgrade decsriptions
         delete data[GYROCOPTER].abilities[3].aghs;

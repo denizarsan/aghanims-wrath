@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import Data from './assets/data/data.json';
+import Data from './assets/data.json';
 
 import AbilityList from './components/AbilityList';
 import ItemGrid from './components/ItemGrid';

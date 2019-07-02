@@ -4,45 +4,30 @@ A tool that shows skills upgradable by Aghanim's Scepter per selected hero/ultim
 
 [Demo](https://aghanims-wrath.firebaseapp.com/)
 
-## Installation
-``` bash
-# clone the repository
-git clone git@github.com:denizarsan/aghanims-wrath.git
-cd aghanims-wrath
-
-# install dependencies
+## Project setup
+```
 npm install
-
-# initialize/update json data and static images
-npm run update
 ```
 
-## Running Locally
-```bash
-# serve with hot reload at localhost:8080
-npm run dev
+### Compiles and hot-reloads for development
+```
+npm run serve
 ```
 
-## Building and Deploying
-```bash
-# build for production with minification
+### Compiles and minifies for production
+```
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# update data, build app and deploy to https://aghanims-wrath.firebaseapp.com/
-npm run deploy
 ```
 
-## Misc
-```bash
-# update json data
-npm run update-data
+## Deploying
+```
+npm publish
+```
 
-# update static images using existing data
-npm run update-images
-
-# run eslint
+### Lints and fixes files
+```
 npm run lint
 ```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

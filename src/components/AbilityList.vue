@@ -2,7 +2,7 @@
   <div class="ability-list columns">
     <div class="list column"  v-if="getStandards().length">
       <h4 class="subtitle is-4">Standard Abilities</h4>
-      <article class="media" v-for="ability in getStandards()">
+      <article class="media" v-for="ability in getStandards()" v-bind:key="ability.name">
         <figure class="media-left">
           <p class="image is-64x64">
             <img :src="getImgSrc(ability)">
@@ -21,7 +21,7 @@
     </div>
     <div class="list column" v-if="getUltimates().length">
       <h4 class="subtitle is-4">Ultimate Abilities</h4>
-      <article class="media" v-for="ability in getUltimates()">
+      <article class="media" v-for="ability in getUltimates()" v-bind:key="ability.name">
         <figure class="media-left">
           <p class="image is-64x64">
             <img :src="getImgSrc(ability)">
@@ -53,7 +53,7 @@ export default {
       return this.abilities.filter(ability => !ability.isUltimate);
     },
     getImgSrc(ability) {
-      return `/static/images/${ability.slug}_md.png`;
+      return `/images/${ability.slug}_md.png`;
     },
   },
 };
