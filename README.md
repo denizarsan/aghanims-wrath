@@ -1,8 +1,6 @@
 # aghanims-wrath
 
-A tool that shows skills upgradable by Aghanim's Scepter per selected hero/ultimate in Ability Draft mode in Dota 2
-
-[Demo](https://aghanims-wrath.firebaseapp.com/)
+Shows skills upgradable by Aghanim's Scepter in Ability Draft mode for Dota 2
 
 ## Project setup
 ```
@@ -21,7 +19,7 @@ npm run build
 
 ## Deploying
 ```
-npm publish
+npm deploy
 ```
 
 ### Lints and fixes files
