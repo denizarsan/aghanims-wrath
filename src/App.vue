@@ -16,7 +16,7 @@
     <div class="container">
       <section class="section">
         <h1 class="title has-text-centered">
-          First, select
+          Select
           <span class="mode"
             :class="{ 'has-text-info': isActive('hero'), 'has-text-grey-light': !isActive('hero') }"
             @click="selectMode('hero')">
@@ -67,7 +67,7 @@
         </div>
 
         <div class="upgrades" v-if="abilities.length">
-          <h1 class="title has-text-centered">Next, see skills upgradable by Aghanim's Scepter</h1>
+          <h1 class="title has-text-centered">Skills upgradable by Aghanim's Scepter</h1>
           <ability-list :abilities="abilities"></ability-list>
         </div>
       </section>
@@ -76,7 +76,7 @@
     <section class="section">
       <div class="container">
         <div class="content has-text-centered">
-          <strong>Aghanim's Wrath</strong> by <a href="https://twitter.com/denizarsan">Deniz Arsan</a>.
+          <strong>Aghanim's Wrath</strong> by <a href="https://github.com/denizarsan">Deniz Arsan</a>.
           <br>
           Design inspired partially from <a href="https://howdoiplay.com">Tsunami's Dota Hero Tips and Counters</a>.
           <br>
@@ -101,8 +101,8 @@ const heroComparator = (a, b) => {
 };
 
 const abilityComparator = (a, b) => {
-  if (a.heroName > b.heroName) { return 1; }
-  if (a.heroName < b.heroName) { return -1; }
+  if (a.hero > b.hero) { return 1; }
+  if (a.hero < b.hero) { return -1; }
   return 0;
 };
 
