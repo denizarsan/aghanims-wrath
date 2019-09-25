@@ -108,6 +108,8 @@ const update = async () => {
   delete data['gyrocopter'].abilities[2].aghs;
   delete data['alchemist'].abilities[3].aghs;
   delete data['treant'].abilities[3].aghs;
+  delete data['nyx_assassin'].abilities[3].aghs;
+  delete data['shredder'].abilities[3].aghs;
 
   // Ultimate corrections
   data['puck'].abilities[2].isUltimate = true;

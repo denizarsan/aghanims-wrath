@@ -3771,7 +3771,6 @@
         "src": "/images/nyx_assassin_vendetta_md.png",
         "slug": "nyx_assassin_vendetta",
         "hero": "nyx_assassin",
-        "aghs": "Grants new ability: Burrow. Nyx Assassin buries himself beneath the battlefield over a short duration.",
         "isUltimate": true
       }
     ]
@@ -4213,7 +4212,6 @@
         "src": "/images/shredder_chakram_md.png",
         "slug": "shredder_chakram",
         "hero": "shredder",
-        "aghs": "Grants a second Chakram.",
         "isUltimate": true
       }
     ]
