@@ -3159,7 +3159,6 @@
         "src": "/images/gyrocopter_flak_cannon_md.png",
         "slug": "gyrocopter_flak_cannon",
         "hero": "gyrocopter",
-        "aghs": "Adds a Side Gunner that at random attacks enemy units near Gyrocopter.",
         "isUltimate": false
       },
       {
@@ -4325,7 +4324,7 @@
         "src": "/images/skywrath_mage_arcane_bolt_md.png",
         "slug": "skywrath_mage_arcane_bolt",
         "hero": "skywrath_mage",
-        "aghs": "When Skywrath Mage casts Mystic Flare, another Mystic Flare will be created on the position of a different random target enemy within %scepter_radius% range. Heroes will take priority",
+        "aghs": "When Skywrath Mage casts Arcane Bolt, a different random target within %scepter_radius% range willl be hit with the same ability. Heroes will take priority.",
         "isUltimate": false
       },
       {
@@ -4335,7 +4334,7 @@
         "src": "/images/skywrath_mage_concussive_shot_md.png",
         "slug": "skywrath_mage_concussive_shot",
         "hero": "skywrath_mage",
-        "aghs": "When Skywrath Mage casts Mystic Flare, another Mystic Flare will be created on the position of a different random target enemy within %scepter_radius% range. Heroes will take priority",
+        "aghs": "When Skywrath Mage casts Concussive Shot, a different random target within cast range will be hit with the same ability. Heroes will take priority.",
         "isUltimate": false
       },
       {
@@ -4345,7 +4344,7 @@
         "src": "/images/skywrath_mage_ancient_seal_md.png",
         "slug": "skywrath_mage_ancient_seal",
         "hero": "skywrath_mage",
-        "aghs": "When Skywrath Mage casts Mystic Flare, another Mystic Flare will be created on the position of a different random target enemy within %scepter_radius% range. Heroes will take priority",
+        "aghs": "Anytime Skywrath Mage casts Ancient Seal, a different random target within %scepter_radius% range will be affected by the same ability. Heroes will take priority.",
         "isUltimate": false
       },
       {

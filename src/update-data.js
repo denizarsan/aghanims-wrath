@@ -87,11 +87,6 @@ const update = async () => {
       return acc;
     }, {})
 
-  // Add Skywrath Mage aghs to all abilities
-  data['skywrath_mage'].abilities[0].aghs = data['skywrath_mage'].abilities[3].aghs;
-  data['skywrath_mage'].abilities[1].aghs = data['skywrath_mage'].abilities[3].aghs;
-  data['skywrath_mage'].abilities[2].aghs = data['skywrath_mage'].abilities[3].aghs;
-
   // Remove unavailable abilities
   data['tiny'].abilities.splice(3, 1);
   data['tiny'].abilities.splice(4, 1);
@@ -109,9 +104,8 @@ const update = async () => {
   // Remove unavailable aghs updates
   delete data['tiny'].abilities[3].aghs;
   delete data['zuus'].abilities[3].aghs;
-  delete data['windrunner'].abilities[3].aghs;
   delete data['spectre'].abilities[3].aghs;
-  delete data['gyrocopter'].abilities[3].aghs;
+  delete data['gyrocopter'].abilities[2].aghs;
   delete data['alchemist'].abilities[3].aghs;
   delete data['treant'].abilities[3].aghs;
 
