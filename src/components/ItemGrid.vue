@@ -1,21 +1,38 @@
 <template>
   <div class="item-grid">
     <div
+      v-for="item in items"
+      v-show="isFiltered(item)"
+      :key="item.id"
       class="item"
       :class="{'is-selected': isSelected(item) }"
-      v-for="item in items"
-      :key="item.id"
-      v-show="isFiltered(item)"
-      @click="onClick(item)">
-      <img class="item-img" :src="item.src"/>
+      @click="onClick(item)"
+    >
+      <img
+        class="item-img"
+        :src="item.src"
+      >
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'item-grid',
-  props: ['items', 'selected', 'query'],
+  name: 'ItemGrid',
+  props: {
+    items: {
+      type: Array,
+      default: () => []
+    },
+    selected: {
+      type: Array,
+      default: () => []
+    },
+    query: {
+      type: String,
+      default: ''
+    }
+  },
   methods: {
     isFiltered(item) {
       return item.name.toLowerCase().includes(this.query.toLowerCase());

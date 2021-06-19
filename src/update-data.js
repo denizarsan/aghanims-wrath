@@ -8,15 +8,13 @@ const ASSETS_DIR = './public/images';
 
 const ENDPOINT_HERO_LIST = 'https://www.dota2.com/datafeed/herolist?language=english';
 const ENDPOINT_HERO_DATA = 'https://www.dota2.com/datafeed/herodata?language=english&hero_id=';
-const ENDPOINT_HERO_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/';
-const ENDPOINT_ABILITY_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/';
 
 const HERO_PREFIX = 'npc_dota_hero_';
 const VALUES_INT_KEY = 'values_int';
 const VALUES_FLOAT_KEY = 'values_float';
 const SPECIAL_VALUE_KEY_REGEX = /%(\S+?)%/g;
 const HTML_LINE_BREAK_REGEX = /<br>/g;
-const HTML_FONT_REGEX = /<\/*font.*?>/g
+const HTML_FONT_REGEX = /<\/*font.*?>/g;
 
 const UNAVAILABLE_ABILITIES = [
   'arc_warden_tempest_double', 'bristleback_hairball', 'broodmother_silken_bola',

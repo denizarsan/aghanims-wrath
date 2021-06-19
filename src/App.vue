@@ -8,7 +8,7 @@
           </h1>
           <h5 class="subtitle">
             Unleash it on your foes in Ability Draft!
-            <br />
+            <br>
             ({{ version }})
           </h5>
         </div>
@@ -19,15 +19,19 @@
       <section class="section">
         <h1 class="title has-text-centered">
           Select
-          <span class="mode"
+          <span
+            class="mode"
             :class="{ 'has-text-info': isActive('hero'), 'has-text-grey-light': !isActive('hero') }"
-            @click="selectMode('hero')">
+            @click="selectMode('hero')"
+          >
             heroes
           </span>
           /
-          <span class="mode"
+          <span
+            class="mode"
             :class="{ 'has-text-info': isActive('ultimate'), 'has-text-grey-light': !isActive('ultimate') }"
-            @click="selectMode('ultimate')">
+            @click="selectMode('ultimate')"
+          >
             ultimates
           </span>
           available in your draft
@@ -35,35 +39,44 @@
 
         <div class="field">
           <div class="control has-icons-left">
-            <input class="input is-info" type="text" placeholder="Search..." v-model="query">
+            <input
+              v-model="query"
+              class="input is-info"
+              type="text"
+              placeholder="Search..."
+            >
             <span class="icon is-left">
-              <i class="fa fa-search"></i>
+              <i class="fa fa-search" />
             </span>
           </div>
         </div>
 
         <item-grid
+          v-show="isActive('hero')"
           :items="heroes"
           :selected="selected"
           :query="query"
           @item-selected="onItemSelected"
           @item-unselected="onItemUnselected"
-          v-show="isActive('hero')">
-        </item-grid>
+        />
 
         <item-grid
+          v-show="isActive('ultimate')"
           :items="ultimates"
           :selected="selected"
           :query="query"
           @item-selected="onItemSelected"
           @item-unselected="onItemUnselected"
-          v-show="isActive('ultimate')">
-        </item-grid>
+        />
 
-        <div class="control has-addons has-text-centered" v-if="selected.length" @click="onResetClick">
+        <div
+          v-if="selected.length"
+          class="control has-addons has-text-centered"
+          @click="onResetClick"
+        >
           <a class="button is-info">
             <span class="icon">
-              <i class="fa fa-refresh"></i>
+              <i class="fa fa-refresh" />
             </span>
             <span>Reset</span>
           </a>
@@ -94,7 +107,7 @@ import UpgradeList from './components/UpgradeList.vue';
 const VERSION = '7.29d';
 
 export default {
-  name: 'app',
+  name: 'App',
   components: { ItemGrid, UpgradeList },
   data() {
     return {
