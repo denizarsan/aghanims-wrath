@@ -1,37 +1,58 @@
-const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
-const DATA_FILE = path.resolve('./src/assets/data.json');
+const DATA_DIR = './src/assets/';
+const DATA_FILE = 'data.json';
 const ASSETS_DIR = './public/images';
-const CDN_URL = 'http://cdn.dota2.com/apps/dota2/images/';
 
-if (!fs.existsSync(DATA_FILE)) {
-  process.exit(0);
-}
-
-const data = require(DATA_FILE);
+const ENDPOINT_HERO_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/';
+const ENDPOINT_ABILITY_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/';
 
 if (!fs.existsSync(ASSETS_DIR)) {
   fs.mkdirSync(ASSETS_DIR);
 }
 
-const images = [];
+const getHeroImg = (slug) => axios.get(`${ENDPOINT_HERO_IMG}${slug}.png`, { responseType: 'arraybuffer' })
+  .then(r => Buffer.from(r.data, 'binary'));
+const getAbilityImg = (slug) => axios.get(`${ENDPOINT_ABILITY_IMG}${slug}.png`, { responseType: 'arraybuffer' })
+  .then(r => Buffer.from(r.data, 'binary'));
 
-Object.keys(data).forEach((key) => {
-  images.push(data[key].img);
-  images.push(data[key].icon);
-  data[key].abilities.forEach((ability) => {
-    images.push(ability.img);
-  });
-});
+const getImages = async (heroes, abilities) => {
+  await Promise.all(heroes.map(async (h) => {
+    const img = await getHeroImg(h.hero);
+    fs.writeFileSync(path.join(ASSETS_DIR, h.hero + '.png'), img);
+  }))
 
-images.forEach((image) => {
-  const filename = image.replace(CDN_URL, '').replace(/(heroes|abilities)\//, '');
-  const outputPath = path.join(ASSETS_DIR, filename);
+  await Promise.all(abilities.ultimates.map(async (u) => {
+    const img = await getAbilityImg(u.id);
+    fs.writeFileSync(path.join(ASSETS_DIR, u.id + '.png'), img);
+  }))
 
-  axios.get(image, { responseType: 'arraybuffer' })
-    .then((response) => {
-      fs.writeFileSync(outputPath, Buffer.from(response.data, 'binary'));
-    });
-});
+  await Promise.all(abilities.scepter.abilities.map(async (a) => {
+    const img = await getAbilityImg(a.id);
+    fs.writeFileSync(path.join(ASSETS_DIR, a.id + '.png'), img);
+  }))
+
+  await Promise.all(abilities.scepter.upgrades.map(async (u) => {
+    const img = await getAbilityImg(u.id);
+    fs.writeFileSync(path.join(ASSETS_DIR, u.id + '.png'), img);
+  }))
+
+  await Promise.all(abilities.shard.abilities.map(async (a) => {
+    const img = await getAbilityImg(a.id);
+    fs.writeFileSync(path.join(ASSETS_DIR, a.id + '.png'), img);
+  }))
+
+  await Promise.all(abilities.shard.upgrades.map(async (u) => {
+    const img = await getAbilityImg(u.id);
+    fs.writeFileSync(path.join(ASSETS_DIR, u.id + '.png'), img);
+  }))
+}
+
+const updateImages = async () => {
+  const data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, DATA_FILE)));
+  await getImages(data.heroes, data.abilities);
+};
+
+updateImages();

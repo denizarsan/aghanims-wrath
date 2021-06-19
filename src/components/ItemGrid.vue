@@ -1,11 +1,13 @@
 <template>
-  <div class="itemGrid">
-    <div :class="{ 'item': !wide, 'item--wide': wide, 'is-selected': isSelected(item) }"
-         v-for="item in items"
-         :key="item.hero"
-         v-show="isFiltered(item)"
-         @click="onClick(item)">
-      <img :src="item.src"/>
+  <div class="item-grid">
+    <div
+      class="item"
+      :class="{'is-selected': isSelected(item) }"
+      v-for="item in items"
+      :key="item.id"
+      v-show="isFiltered(item)"
+      @click="onClick(item)">
+      <img class="item-img" :src="item.src"/>
     </div>
   </div>
 </template>
@@ -13,7 +15,7 @@
 <script>
 export default {
   name: 'item-grid',
-  props: ['items', 'selected', 'query', 'wide'],
+  props: ['items', 'selected', 'query'],
   methods: {
     isFiltered(item) {
       return item.name.toLowerCase().includes(this.query.toLowerCase());
@@ -32,12 +34,13 @@ export default {
 @import '~bulma/sass/utilities/initial-variables.sass';
 @import '~bulma/sass/utilities/derived-variables.sass';
 
-.itemGrid {
+$item-width: 128px;
+
+.item-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   margin-bottom: $size-large;
-
 }
 
 .item {
@@ -51,12 +54,7 @@ export default {
   }
 }
 
-.item--wide {
-  @extend .item;
-  padding: $size-normal / 2;
-
-  &.is-selected {
-    filter: drop-shadow(0 0 $size-small / 3 $cyan);
-  }
+.item-img {
+  width: $item-width;
 }
 </style>

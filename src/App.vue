@@ -6,9 +6,11 @@
           <h1 class="title">
             Aghanim's Wrath
           </h1>
-          <h2 class="subtitle">
+          <h5 class="subtitle">
             Unleash it on your foes in Ability Draft!
-          </h2>
+            <br />
+            ({{ version }})
+          </h5>
         </div>
       </div>
     </section>
@@ -40,21 +42,22 @@
           </div>
         </div>
 
-        <item-grid :items="heroes"
-                   :selected="selected"
-                   :query="query"
-                   :wide="true"
-                   @item-selected="onItemSelected"
-                   @item-unselected="onItemUnselected"
-                   v-show="isActive('hero')">
+        <item-grid
+          :items="heroes"
+          :selected="selected"
+          :query="query"
+          @item-selected="onItemSelected"
+          @item-unselected="onItemUnselected"
+          v-show="isActive('hero')">
         </item-grid>
 
-        <item-grid :items="ultimates"
-                   :selected="selected"
-                   :query="query"
-                   @item-selected="onItemSelected"
-                   @item-unselected="onItemUnselected"
-                   v-show="isActive('ultimate')">
+        <item-grid
+          :items="ultimates"
+          :selected="selected"
+          :query="query"
+          @item-selected="onItemSelected"
+          @item-unselected="onItemUnselected"
+          v-show="isActive('ultimate')">
         </item-grid>
 
         <div class="control has-addons has-text-centered" v-if="selected.length" @click="onResetClick">
@@ -66,10 +69,7 @@
           </a>
         </div>
 
-        <div class="upgrades" v-if="abilities.length">
-          <h1 class="title has-text-centered">Skills upgradable by Aghanim's Scepter</h1>
-          <ability-list :abilities="abilities"></ability-list>
-        </div>
+        <upgrade-list :upgrades="upgrades" />
       </section>
     </div>
 
@@ -77,8 +77,6 @@
       <div class="container">
         <div class="content has-text-centered">
           <strong>Aghanim's Wrath</strong> by <a href="https://github.com/denizarsan">Deniz Arsan</a>.
-          <br>
-          Design inspired partially from <a href="https://howdoiplay.com">Tsunami's Dota Hero Tips and Counters</a>.
           <br>
           <a href="http://www.dota2.com">Dota 2</a> is a registered trademark of <a href="http://www.valvesoftware.com/">Valve Corporation</a>.
         </div>
@@ -90,40 +88,37 @@
 <script>
 import Data from './assets/data.json';
 
-import AbilityList from './components/AbilityList';
 import ItemGrid from './components/ItemGrid';
+import UpgradeList from './components/UpgradeList.vue';
 
-// Comparators for sorting
-const heroComparator = (a, b) => {
-  if (a.name > b.name) { return 1; }
-  if (a.name < b.name) { return -1; }
-  return 0;
-};
+const VERSION = '7.29d';
 
-const abilityComparator = (a, b) => {
-  if (a.hero > b.hero) { return 1; }
-  if (a.hero < b.hero) { return -1; }
-  return 0;
-};
-
-const heroes = Object.values(Data).sort(heroComparator);
-
-const ultimates = Object.values(Data)
-                    .map(hero => hero.abilities.filter(ability => ability.isUltimate))
-                    .reduce((a, b) => a.concat(b)) // flatten
-                    .sort(abilityComparator); // sort by hero name
 export default {
   name: 'app',
-  components: { AbilityList, ItemGrid },
+  components: { ItemGrid, UpgradeList },
   data() {
     return {
-      abilities: [],
-      heroes,
-      ultimates,
+      heroes: Data.heroes,
+      ultimates: Data.abilities.ultimates,
+      version: VERSION,
       selected: [],
       query: '',
       mode: 'hero',
     };
+  },
+  computed: {
+    upgrades() {
+      return {
+        scepter: {
+          upgrades: Data.abilities.scepter.upgrades.filter((u) => this.selected.includes(u.hero)),
+          abilities: Data.abilities.scepter.abilities.filter((a) => this.selected.includes(a.hero)),
+        },
+        shard: {
+          upgrades: Data.abilities.shard.upgrades.filter((u) => this.selected.includes(u.hero)),
+          abilities: Data.abilities.shard.abilities.filter((a) => this.selected.includes(a.hero)),
+        }
+      }
+    },
   },
   methods: {
     selectMode(mode) {
@@ -133,33 +128,14 @@ export default {
       return this.mode === mode;
     },
     onResetClick() {
-      // Reset everything
-      this.abilities = [];
       this.selected = [];
       this.query = '';
     },
     onItemSelected(item) {
-      // Add new abilities to the list of all abilities
-      this.abilities =
-        [...this.abilities, ...Data[item.hero].abilities.filter(ability => ability.aghs)];
-
-      // Remove duplicates
-      this.abilities = [...new Set(this.abilities)];
-
-      // Sort the list of all abilities alphabetically by hero name
-      this.abilities.sort(abilityComparator);
-
-      // Add hero to selected heroes
       this.selected.push(item.hero);
-
-      // Clear the search query
       this.query = '';
     },
     onItemUnselected(item) {
-      // Remove abilities of the hero from the list of all abilities
-      this.abilities = this.abilities.filter(ability => ability.hero !== item.hero);
-
-      // Remove hero from the list of selected heroes
       this.selected.splice(this.selected.indexOf(item.hero), 1);
     },
   },
@@ -177,10 +153,6 @@ $mode-transition-speed: .4s;
   width: $field-width;
   margin-left: auto;
   margin-right: auto;
-}
-
-.upgrades {
-  margin-top: $size-large * 2;
 }
 
 .mode {
