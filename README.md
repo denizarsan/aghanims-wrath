@@ -19,7 +19,7 @@ npm run build
 
 ## Deploying
 ```
-npm deploy
+npm run deploy
 ```
 
 ### Lints and fixes files
