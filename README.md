@@ -1,6 +1,6 @@
 # aghanims-wrath
 
-Shows skills upgradable by Aghanim's Scepter in Ability Draft mode for Dota 2
+Shows skills upgradable by Aghanim's Scepter and Shard in Ability Draft mode for Dota 2
 
 ## Project setup
 ```
